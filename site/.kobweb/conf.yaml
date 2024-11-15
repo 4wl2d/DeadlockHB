@@ -1,0 +1,14 @@
+site:
+  title: "DeadlockHB"
+
+server:
+  files:
+    dev:
+      contentRoot: "build/processedResources/js/main/public"
+      script: "build/kotlin-webpack/js/developmentExecutable/deadlockhb.js"
+      api: "build/libs/deadlockhb.jar"
+    prod:
+      script: "build/kotlin-webpack/js/productionExecutable/deadlockhb.js"
+      siteRoot: ".kobweb/site"
+
+  port: 8080
