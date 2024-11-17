@@ -1,10 +1,9 @@
 package ind.wl2d.deadlockhb.pages
 
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import com.varabyte.kobweb.compose.css.StyleVariable
-import com.varabyte.kobweb.compose.foundation.layout.Box
-import com.varabyte.kobweb.compose.foundation.layout.Column
-import com.varabyte.kobweb.compose.foundation.layout.Row
+import com.varabyte.kobweb.compose.foundation.layout.*
+import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.graphics.Colors
@@ -32,101 +31,79 @@ import org.jetbrains.compose.web.dom.Text
 import ind.wl2d.deadlockhb.HeadlineTextStyle
 import ind.wl2d.deadlockhb.SubheadlineTextStyle
 import ind.wl2d.deadlockhb.components.layouts.PageLayout
+import ind.wl2d.deadlockhb.components.widgets.DefaultButton
 import ind.wl2d.deadlockhb.toSitePalette
 
 // Container that has a tagline and grid on desktop, and just the tagline on mobile
-val HeroContainerStyle = CssStyle {
+val HomeContainerStyle = CssStyle {
     base { Modifier.fillMaxWidth().gap(2.cssRem) }
     Breakpoint.MD { Modifier.margin { top(20.vh) } }
 }
 
-// A demo grid that appears on the homepage because it looks good
-val HomeGridStyle = CssStyle.base {
-    Modifier
-        .gap(0.5.cssRem)
-        .width(70.cssRem)
-        .height(18.cssRem)
+enum class ItemCategoryState {
+    WEAPONS,
+    VITALITY,
+    SPIRIT
 }
 
-private val GridCellColorVar by StyleVariable<Color>()
-val HomeGridCellStyle = CssStyle.base {
-    Modifier
-        .backgroundColor(GridCellColorVar.value())
-        .boxShadow(blurRadius = 0.6.cssRem, color = GridCellColorVar.value())
-        .borderRadius(1.cssRem)
-}
+private var categoryState by remember { mutableStateOf(ItemCategoryState.WEAPONS) }
 
 @Composable
-private fun GridCell(color: Color, row: Int, column: Int, width: Int? = null, height: Int? = null) {
-    Div(
-        HomeGridCellStyle.toModifier()
-            .setVariable(GridCellColorVar, color)
-            .gridItem(row, column, width, height)
-            .toAttrs()
+private fun CategoryListButtons(
+    modifier: Modifier = Modifier,
+) {
+    DefaultButton(
+        onClick = {
+            categoryState = ItemCategoryState.WEAPONS
+        },
+        color = Colors.Orange,
+        content = {
+            Text("Weapons")
+        }
+    )
+    DefaultButton(
+        onClick = {
+            categoryState = ItemCategoryState.VITALITY
+        },
+        color = Colors.Green,
+        content = {
+            Text("Vitality")
+        }
+    )
+    DefaultButton(
+        onClick = {
+            categoryState = ItemCategoryState.SPIRIT
+        },
+        color = Colors.Purple,
+        content = {
+            Text("Spirit")
+        }
     )
 }
 
 @Page
 @Composable
 fun HomePage() {
-    PageLayout("Home") {
-        Row(HeroContainerStyle.toModifier()) {
+    PageLayout("Items") {
+        Row(HomeContainerStyle.toModifier()) {
             Box {
                 val sitePalette = ColorMode.current.toSitePalette()
 
-                Column(Modifier.gap(2.cssRem)) {
-                    Div(HeadlineTextStyle.toAttrs()) {
-                        SpanText(
-                            "Use this template as your starting point for ", Modifier.color(
-                                when (ColorMode.current) {
-                                    ColorMode.LIGHT -> Colors.Black
-                                    ColorMode.DARK -> Colors.White
-                                }
-                            )
-                        )
-                        SpanText(
-                            "Kobweb",
-                            Modifier
-                                .color(sitePalette.brand.accent)
-                                // Use a shadow so this light-colored word is more visible in light mode
-                                .textShadow(0.px, 0.px, blurRadius = 0.5.cssRem, color = Colors.Gray)
-                        )
+                Column(
+                    modifier = Modifier
+                ) {
+                    var categoryState by remember { mutableStateOf(ItemCategoryState.WEAPONS) }
+                    // Buttons
+                    Row(Modifier.gap(1.5.cssRem).displayIfAtLeast(Breakpoint.MD), verticalAlignment = Alignment.CenterVertically) {
+                        CategoryListButtons()
                     }
 
-                    Div(SubheadlineTextStyle.toAttrs()) {
-                        SpanText("You can read the ")
-                        Link("/about", "About")
-                        SpanText(" page for more information.")
-                    }
+                    Column {
+                        Row {  }
 
-                    val ctx = rememberPageContext()
-                    Button(onClick = {
-                        // Change this click handler with your call-to-action behavior
-                        // here. Link to an order page? Open a calendar UI? Play a movie?
-                        // Up to you!
-                        ctx.router.tryRoutingTo("/about")
-                    }, colorScheme = ColorSchemes.Blue) {
-                        Text("This could be your CTA")
+                        Row {  }
                     }
                 }
-            }
-
-            Div(HomeGridStyle
-                .toModifier()
-                .displayIfAtLeast(Breakpoint.MD)
-                .grid {
-                    rows { repeat(3) { size(1.fr) } }
-                    columns { repeat(5) {size(1.fr) } }
-                }
-                .toAttrs()
-            ) {
-                val sitePalette = ColorMode.current.toSitePalette()
-                GridCell(sitePalette.brand.primary, 1, 1, 2, 2)
-                GridCell(ColorSchemes.Monochrome._600, 1, 3)
-                GridCell(ColorSchemes.Monochrome._100, 1, 4, width = 2)
-                GridCell(sitePalette.brand.accent, 2, 3, width = 2)
-                GridCell(ColorSchemes.Monochrome._300, 2, 5)
-                GridCell(ColorSchemes.Monochrome._800, 3, 1, width = 5)
             }
         }
     }
