@@ -17,23 +17,20 @@ import org.jetbrains.compose.web.css.px
 fun DefaultButton(
     onClick: () -> Unit,
     content: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
     color: Color
 ) {
     Button(
         // when state in row
         onClick = { onClick() },
-        Modifier
+        modifier
             .width(178.px)
             .height(65.px)
             .backgroundColor(color)
             .onFocus {
-                Modifier
+                modifier
                     .border(
-                        2.px,
-                        color = when (ColorMode.current) {
-                            ColorMode.LIGHT -> Colors.Black
-                            ColorMode.DARK -> Colors.White
-                        }
+                        2.px
                     )
             }
     ) {
