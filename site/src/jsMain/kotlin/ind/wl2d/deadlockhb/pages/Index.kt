@@ -1,12 +1,16 @@
 package ind.wl2d.deadlockhb.pages
 
 import androidx.compose.runtime.*
+import com.varabyte.kobweb.compose.css.BackgroundClip
+import com.varabyte.kobweb.compose.dom.svg.Svg
 import com.varabyte.kobweb.compose.foundation.layout.*
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import com.varabyte.kobweb.core.Page
+import com.varabyte.kobweb.silk.components.forms.CheckboxKind
+import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.style.CssStyle
 import com.varabyte.kobweb.silk.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.style.breakpoint.displayIfAtLeast
@@ -16,8 +20,10 @@ import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.css.vh
 import org.jetbrains.compose.web.dom.Text
 import ind.wl2d.deadlockhb.components.layouts.PageLayout
+import ind.wl2d.deadlockhb.components.model.Item
 import ind.wl2d.deadlockhb.components.widgets.DefaultButton
 import ind.wl2d.deadlockhb.toSitePalette
+import org.jetbrains.compose.web.css.px
 
 // Container that has a tagline and grid on desktop, and just the tagline on mobile
 val HomeContainerStyle = CssStyle {
@@ -82,18 +88,76 @@ fun HomePage(
                         )
                     }
 
+                    Row (modifier.height(20.px)) {  }
+
                     when (categoryState) {
-                        ItemCategoryState.WEAPONS -> Text("weapons");
+                        ItemCategoryState.WEAPONS -> WeaponsItemBox(modifier);
                         ItemCategoryState.VITALITY -> Text("vitality");
                         ItemCategoryState.SPIRIT -> Text("spirit");
                     }
-                    Column {
-                        Row {  }
-
-                        Row {  }
-                    }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ItemsList(
+    modifier: Modifier = Modifier,
+    itemList: List<Item>
+) {
+    itemList.forEach { it ->
+        Column(
+            modifier.padding { 1.2.cssRem }
+        ) {
+            Text(it.price.toString())
+            it.image
+            Text(it.title)
+        }
+    }
+}
+
+@Composable
+private fun WeaponsItemBox(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier
+        ) {
+            Box(
+                modifier
+                    .size(100.px)
+                    .backgroundColor(Colors.Orange)
+                    .border(2.px)
+                    .borderRadius(12.px),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("500 souls")
+            }
+            ItemsList(
+                modifier,
+                listOf(
+                    Item(1,1,null,"basic","weapons",false)
+                )
+            )
+        }
+        Row(
+
+        ) {
+
+        }
+        Row(
+
+        ) {
+
+        }
+        Row(
+
+        ) {
+
         }
     }
 }

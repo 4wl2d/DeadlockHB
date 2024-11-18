@@ -30,7 +30,7 @@ fun DefaultButton(
             .onFocus {
                 modifier
                     .border(
-                        2.px
+                        20.px
                     )
             }
     ) {
